@@ -1,3 +1,8 @@
+<?php 
+if (isset($_POST['code_btn'])) {
+  header("Location: functions/process.php?code_btn=true&voucher_code=$_REQUEST[voucher_code]");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,7 +37,7 @@
 
             <?php
             include("connection.php");
-            $result = mysqli_query($link, "select json_arrayagg(carts.id) as cart_id, carts.*, product.name, product.price as product_price, sum(carts.qty) as qty, sum(product.price) as price from carts inner join product on carts.product_id=product.id where user_id=$_SESSION[user_id] group by carts.product_id");
+            $result = mysqli_query($link, "select group_concat(concat('\"', carts.id , '\"')) as cart_id, carts.*, product.name, product.price as product_price, sum(carts.qty) as qty, sum(product.price) as price from carts inner join product on carts.product_id=product.id where user_id=$_SESSION[user_id] group by carts.product_id");
             $total = $qtyTotal = $i = 0;
             while ($row = mysqli_fetch_assoc($result)) {
               $cartId = json_decode(json_encode("[".$row['cart_id']."]"),true);

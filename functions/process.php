@@ -1,8 +1,8 @@
 <?php
 include('../connection.php');
 date_default_timezone_set('Asia/Jakarta');
-if (isset($_POST['code_btn'])) {
-  $query = mysqli_query($link, "select * from vouchers where code='$_POST[voucher_code]'");
+if (isset($_REQUEST['code_btn'])) {
+  $query = mysqli_query($link, "select * from vouchers where code='$_REQUEST[voucher_code]'");
   $result = mysqli_fetch_assoc($query);
   $error = mysqli_error($link);
   if ($error) {
@@ -19,7 +19,7 @@ if (isset($_POST['code_btn'])) {
       } elseif ($now < $start || $now > $exp) {
         header("Location: $baseUrl/cart.php?info=Voucher cannot be used&decorator=danger&accept=false");
       } else {
-        header("Location: $baseUrl/cart.php?info=Voucher applied&decorator=info&vcode=$_POST[voucher_code]&accept=true");
+        header("Location: $baseUrl/cart.php?info=Voucher applied&decorator=info&vcode=$_REQUEST[voucher_code]&accept=true");
       }
     }
   }
@@ -42,7 +42,7 @@ if (isset($_POST['code_btn'])) {
     $totalPrice += $input['price'];
   }
   foreach ($_POST['select'] as $selects) {
-    $selectData = json_decode($selects,true)[0];
+    $selectData = json_decode($selects,true);
     if($selectData!=0){
       foreach ($selectData as $cartId) {
         mysqli_query($link, "delete from carts where id=$cartId");
